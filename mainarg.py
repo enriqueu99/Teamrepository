@@ -9,14 +9,12 @@ import urllib.request
 import json
 import pprint
 import numpy as np
-import talib
+
 
 #WEATHER MAP API KEYS
 api_key = '82e12f4da82605a5564356a9f44740d5'
 msft = yf.Ticker("MSFT")
-
-
-
+api_token = 3
 
 
 
@@ -24,7 +22,8 @@ def stock(ticker):
     share = yf.Ticker(ticker)
     #now a callable dictionary, need to look at ouput for keys 
     b = share.info
-    return 'day high',b['dayHigh'],'52 week low',b['fiftyTwoWeekLow'],'regular market open',b['regularMarketOpen']
+    print(b)
+    return 'day high',b['dayHigh'],'52 week low',b['fiftyTwoWeekLow'],'regular market open',b['regularMarketOpen'],'previousclose',b['previousClose'],'regularmarketprice',b['regularMarketPrice']
     
 
 def convertlst(a):
@@ -95,10 +94,10 @@ def goodmood():
         response = weburl2.read().decode('utf-8')
         response2 = json.loads(response)
         z = response2['weather'][0]['description']
-        print(z)
+        #print(z)
         weather.append(z)
         #pp.pprint(z)
-        pp.pprint(response2['weather'][0]['description'])
+        #pp.pprint(response2['weather'][0]['description'])
     return weather
     
 
@@ -108,11 +107,38 @@ def sigmoid(x):
 def sigmoidderivative(x):
     return x * (1-x)
 
+
+x = stock('AAPL')
+zzz = stock('MSFT')
+xxx = stock('TSLA')
+nnn = stock('NFLX')
+z = convertlst(x)#AAPL
+zz = convertlst(zzz)#MSFT
+xx = convertlst(xxx)#TSLA
+nn = convertlst(nnn)#NTFLX
+
+
+x1 =  ((xx['regular market open']- xx['previousclose'])/xx['previousclose'])
+if x1 > 0:
+    x1 = 1
+elif x1 <0:
+    x1 = 0
+
+
+z1 =  goodmood()[0]
+
+if z1 == 'clear sky' or 'scattered clouds' or 'few clouds':
+    z1 = 1
+else: z1 = 0
+
+
+
+
 # good weather = 1 bad weather = 0
 # upward moving RSI =1 downward moving RSI 0
 # output, 0 = down, 1 = up
 
-traininginputs = np.array([x1,z1,n1],
+'''traininginputs = np.array([x1,z1,n1],
                           [x2,z2,n2],
                           [x2,z3,n3],
                           [x4,z4,n4],
@@ -130,7 +156,7 @@ for iteration in range(10):
     outputs = sigmoid(np.dot(inputlayer,synapticweights))
     error = trainingoutputs - outputs
     adjustment = error *sigmoidderivative(outputs)
-    synapticweights += np.dot(inputlayer.T,adjustment)
+    synapticweights += np.dot(inputlayer.T,adjustment)'''
     
 
 
@@ -142,14 +168,7 @@ for iteration in range(10):
 
 
     
-x = stock('AAPL')
-zzz = stock('MSFT')
-xxx = stock('TSLA')
-nnn = stock('NFLX')
-z = convertlst(x)#AAPL
-zz = convertlst(zzz)#MSFT
-xx = convertlst(xxx)#TSLA
-nn = convertlst(nnn)#NTFLX
+
 
 
 
@@ -157,22 +176,13 @@ nn = convertlst(nnn)#NTFLX
 if __name__ == '__main__':
     #geo()
     #print(goodmood())
-    print(xxx)
+    #print(goodmood())
+    #print(z1)
 
 
 
 
-#TESTING TESTING TESTING TESTING
 
-#print(z)
-#print(stockanalysis(z))
-
-
-#Testing output 
-#print(stock('AAPL'))
-#succesfully converted list into dictionary 
-
-#print(z)
 
 
 
