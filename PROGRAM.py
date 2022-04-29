@@ -75,10 +75,13 @@ for iteration in range(100):
 print("outputs after training:")
 print(outputs)
 
+def buysell():
+    if outputs > .6 :
+        return 'buy'
+    else: return 'sell'
 
 
-
-
+decision = buysell()
 
 
 
