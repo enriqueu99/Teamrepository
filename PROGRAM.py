@@ -76,9 +76,11 @@ print("outputs after training:")
 print(outputs)
 
 def buysell():
-    if outputs > .6 :
+    if outputs > .5 :
         return 'buy'
-    else: return 'sell'
+    elif outputs == .5:
+        return"hold"
+    else: return "sell"
 
 
 decision = buysell()
