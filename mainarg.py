@@ -9,6 +9,7 @@ import urllib.request
 import json
 import pprint
 import numpy as np
+import talib
 
 #WEATHER MAP API KEYS
 api_key = '82e12f4da82605a5564356a9f44740d5'
@@ -99,60 +100,37 @@ def goodmood():
         #pp.pprint(z)
         pp.pprint(response2['weather'][0]['description'])
     return weather
-
-
-
-
-def coinbaseorderid():
-    url = "https://api.exchange.coinbase.com/currencies"
-
-    headers = {"Accept": "application/json"}
-
-    response = requests.get(url, headers=headers)
-
-    print(response.text)
-    return response.text
-
-def coinbaseorder():
-    url = "https://api.exchange.coinbase.com/orders"
-
-    payload = {
-
-    "profile_id": "hhh", 
-    "type": "limit",
-    "side": "buy",
-    "stp": "dc",
-    "stop": "loss",
-    "time_in_force": "GTC",
-    "cancel_after": "min",
-    "post_only": "false",
-    "product_id": "sol-usd",
-    "stop_price": "98.76",
-    "price": "98.54",
-    "size": ".5"}
-                
-    headers = {
-    "Accept": "application/json",
-    "Content-Type": "application/json"}
-                                
-
-    response = requests.post(url, json=payload, headers=headers)
-
-    print(response.text)
     
 
 
-    #response : 200, ORDER SUCCESFUL 401, UNAUTHORIZED, 500, UNEXPECED ERROR
+def sigmoid(x):
+    return 1/(1+np.exp(-x))
+def sigmoidderivative(x):
+    return x * (1-x)
 
-x = np.array([0,0,1],
-             [0,0,1],
-             [1,0,1],)   
+# good weather = 1 bad weather = 0
+# upward moving RSI =1 downward moving RSI 0
+# output, 0 = down, 1 = up
 
+traininginputs = np.array([x1,z1,n1],
+                          [x2,z2,n2],
+                          [x2,z3,n3],
+                          [x4,z4,n4],
+                          )
+
+trainingoutputs = np.array([[0,1,0,1]]).T
    
 
-    
+np.random.seed(1)
 
+synapticweights = 2* np.random.random((3,1))-1
 
+for iteration in range(10):
+    inputlayer = traininginputs
+    outputs = sigmoid(np.dot(inputlayer,synapticweights))
+    error = trainingoutputs - outputs
+    adjustment = error *sigmoidderivative(outputs)
+    synapticweights += np.dot(inputlayer.T,adjustment)
     
 
 
@@ -179,7 +157,7 @@ nn = convertlst(nnn)#NTFLX
 if __name__ == '__main__':
     #geo()
     #print(goodmood())
-    print(coinbaseorderid())
+    print(xxx)
 
 
 
