@@ -1,10 +1,10 @@
 
 from flask import Flask, redirect, render_template, url_for, Request,request
-from PROGRAM import decision
+
 
 app = Flask(__name__)
 
-decision
+
 
 @app.route('/', methods=["GET","POST"])
 def form():
@@ -15,3 +15,4 @@ def form():
 
 if __name__ == '__main__':
    app.run(debug=True)
+   
