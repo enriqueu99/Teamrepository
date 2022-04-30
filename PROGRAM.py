@@ -8,6 +8,9 @@ import json
 import pprint
 import numpy as np
 from mainarg import stock,convertlst,goodmood,sigmoid,sigmoidderivative,geo
+from flask import Flask, redirect, render_template, url_for, Request,request
+
+
 
 api_key = '82e12f4da82605a5564356a9f44740d5'
 msft = yf.Ticker("MSFT")
@@ -51,42 +54,59 @@ if xx['previousclose'] < xx['regularmarketprice']:
     m = 1
 else: m=0
 
-traininginputs = np.array([[x1,z1,n1]]          
+def ML():
+    traininginputs = np.array([[x1,z1,n1]]          
                                     
                                     )
 
-trainingoutputs = np.array([[m]]).T
+    trainingoutputs = np.array([[m]]).T
    
 
-np.random.seed(1)
+    np.random.seed(1)
 
-synapticweights = 2* np.random.random((3,1))-1
-print('random synaptic weights:')
-print(synapticweights)
+    synapticweights = 2* np.random.random((3,1))-1
+    print('random synaptic weights:')
+    print(synapticweights)
 
 
-for iteration in range(100):
-    inputlayer = traininginputs
-    outputs = sigmoid(np.dot(inputlayer,synapticweights))
-    error = trainingoutputs - outputs
-    adjustment = error *sigmoidderivative(outputs)
-    synapticweights += np.dot(inputlayer.T,adjustment)
+    for iteration in range(100):
+        inputlayer = traininginputs
+        outputs = sigmoid(np.dot(inputlayer,synapticweights))
+        error = trainingoutputs - outputs
+        adjustment = error *sigmoidderivative(outputs)
+        synapticweights += np.dot(inputlayer.T,adjustment)
     
-print("outputs after training:")
-print(outputs)
+    print("outputs after training:")
+    print(outputs)
+    return outputs
+outputs = ML()
 
 def buysell():
     if outputs > .5 :
-        return 'buy'
+        return "buy"
     elif outputs == .5:
         return"hold"
     else: return "sell"
 
 
-decision = buysell()
 
 
 
+
+decisions = buysell()
+
+
+
+app = Flask(__name__)
+
+
+
+@app.route('/', methods=["GET","POST"])
+def form():
+    if request.method == "POST":
+        return render_template("display.html") 
+    return render_template("website.html",decision = decisions)
     
 
-
+if __name__ == '__main__':
+   app.run(debug=True)
