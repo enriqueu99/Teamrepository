@@ -22,7 +22,7 @@ def stock(ticker):
     share = yf.Ticker(ticker)
     #now a callable dictionary, need to look at ouput for keys 
     b = share.info
-    print(b)
+    #print(b)
     return 'day high',b['dayHigh'],'52 week low',b['fiftyTwoWeekLow'],'regular market open',b['regularMarketOpen'],'previousclose',b['previousClose'],'regularmarketprice',b['regularMarketPrice']
     
 
@@ -134,30 +134,6 @@ else: z1 = 0
 
 
 
-# good weather = 1 bad weather = 0
-# upward moving RSI =1 downward moving RSI 0
-# output, 0 = down, 1 = up
-
-'''traininginputs = np.array([x1,z1,n1],
-                          [x2,z2,n2],
-                          [x2,z3,n3],
-                          [x4,z4,n4],
-                          )
-
-trainingoutputs = np.array([[0,1,0,1]]).T
-   
-
-np.random.seed(1)
-
-synapticweights = 2* np.random.random((3,1))-1
-
-for iteration in range(10):
-    inputlayer = traininginputs
-    outputs = sigmoid(np.dot(inputlayer,synapticweights))
-    error = trainingoutputs - outputs
-    adjustment = error *sigmoidderivative(outputs)
-    synapticweights += np.dot(inputlayer.T,adjustment)'''
-    
 
 
 
@@ -173,13 +149,8 @@ for iteration in range(10):
 
 
 
-if __name__ == '__main__':
-    #geo()
-    #print(goodmood())
-    #print(goodmood())
-    #print(z1)
 
-
+  
 
 
 
