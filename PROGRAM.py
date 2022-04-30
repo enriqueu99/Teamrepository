@@ -9,7 +9,7 @@ import pprint
 import numpy as np
 from mainarg import stock,convertlst,goodmood,sigmoid,sigmoidderivative,geo
 from flask import Flask, redirect, render_template, url_for, Request,request
-
+import csv
 
 
 api_key = '82e12f4da82605a5564356a9f44740d5'
@@ -65,8 +65,8 @@ def ML():
     np.random.seed(1)
 
     synapticweights = 2* np.random.random((3,1))-1
-    print('random synaptic weights:')
-    print(synapticweights)
+    #print('random synaptic weights:')
+    #print(synapticweights)
 
 
     for iteration in range(100):
@@ -76,8 +76,8 @@ def ML():
         adjustment = error *sigmoidderivative(outputs)
         synapticweights += np.dot(inputlayer.T,adjustment)
     
-    print("outputs after training:")
-    print(outputs)
+    #print("outputs after training:")
+    #print(outputs)
     return outputs
 outputs = ML()
 
@@ -104,9 +104,17 @@ app = Flask(__name__)
 @app.route('/', methods=["GET","POST"])
 def form():
     if request.method == "POST":
-        return render_template("display.html") 
-    return render_template("website.html",decision = decisions)
+        email = request.form['located']
+        fieldnames = ['email']
+        with open('data.csv','w') as inFile:
+            writer = csv.DictWriter(inFile, fieldnames=fieldnames)
+            writer.writerow({'email': email})
+
+            return render_template("display.html",decision = decisions,mlout =outputs) 
+    return render_template("website.html")
     
 
 if __name__ == '__main__':
    app.run(debug=True)
+
+
